@@ -8,12 +8,12 @@ from PIL import Image
 
 images = "./images/" # Folder where the program looks for images
 canvas = Image.new("RGB", (794, 1123), (255, 255, 255)) # Create blank A4 canvas
-# canvas.save("empty-canvas.png") # Save it for testing
+# canvas.save("empty-canvas.png") # Testing
 print(os.listdir(images)) # Verifying "images" folder contents
 
-offset_x = 0
-offset_y = 0
-location = (offset_x, offset_y) # Coordinates
+offset_x = 16 # (A4 width - 3 * card width) / 4
+offset_y = 28  # (A4 length - 3 * card length) / 4
+location = (offset_x, offset_y) # Coordinates for top-left corner of each card
 cards_per_row = 3
 
 for image in os.listdir(images): # Parsing contents of "images"
@@ -36,14 +36,12 @@ for image in os.listdir(images): # Parsing contents of "images"
             )
 
             if cards_per_row == 1: # Last card for current row
-                location = (offset_x, location[1] + 336) # Go to the next row within the canvas
+                location = (offset_x, location[1] + 336 + offset_y) # Go to the next row within the canvas
                 cards_per_row = 3
-            else:
-                location = (location[0] + 240, location[1]) # Update location for next image
+            else: # Not last card for current row
+                location = (location[0] + 240 + offset_x, location[1]) # Update location for next image
                 cards_per_row -= 1
 
             copies -= 1
 
-            # print(type(img), img.format, img.size)
-
-canvas.save("DLC.png") # Save final product
+canvas.save("DLC.png") # Save the final product
