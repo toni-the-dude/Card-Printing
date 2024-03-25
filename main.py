@@ -6,20 +6,30 @@ from PIL import Image
 # There is a slight difference when converting; decided to use 240 x 336 pixels.
 # A4 paper size in pixels is 1123 x 794 pixels for 96 DPI. Settled on 96 by chance.
 
-images = "./images/"
-# filename = "./images/Diamond_Cutter.webp"
-canvas = Image.new("RGB", (1123, 794), (255, 255, 255)) # Blank A4 canvas
-canvas.save("empty-canvas.png")
-print(os.listdir(images))
+images = "./images/" # Folder where the program looks for images
+canvas = Image.new("RGB", (794, 1123), (255, 255, 255)) # Create blank A4 canvas
+# canvas.save("empty-canvas.png") # Save it for testing
+print(os.listdir(images)) # Verifying "images" folder contents
 
-for image in os.listdir(images):
+location = (0, 0) # Coordinates
 
-    filename = "./images/" + image
+for image in os.listdir(images): # Parsing contents of "images"
+
+    filename = "./images/" + image # Provide full path for safety sake
+    
+    # Update location for next image
 
     with Image.open(filename) as img:
 
         img.load
 
-        print(type(img), img.format, img.size)
+        canvas.paste(
+            img.resize((240, 336)), # Image being pasted in also gets resized
+            location # Where to place top-left corner of the image
+        )
 
-# img.show()
+        location = (location[0] + 240, location[1])
+
+        # print(type(img), img.format, img.size)
+
+canvas.save("DLC.png") # Save final product
